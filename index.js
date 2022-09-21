@@ -17,4 +17,5 @@ taskForm.addEventListener('submit', (e) => {
 
     saveTask(title.value, description.value)
     //console.log(title,description)
+    taskForm.reset()
 })
