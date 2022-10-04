@@ -1,8 +1,9 @@
-import {saveTask, getTask, onGetTask, deleteTask} from './firebase.js'
+import {saveTask, getTasks, getTask, onGetTask, deleteTask, updateTask} from './firebase.js'
 
 const taskForm = document.getElementById('task-form')
 const taskContainer = document.getElementById('tasks-container')
-
+let editStatus = false;
+let id = '';
 //Este evento nos permite ejecutar algo cuando la pagina se carga
 
 window.addEventListener('DOMContentLoaded', async () => {
@@ -22,6 +23,7 @@ window.addEventListener('DOMContentLoaded', async () => {
                     <h2> ${task.title} </h1>
                     <p> ${task.description} </p>
                     <button class="btn-delete" data-id="${doc.id}" >Delete</button>
+                    <button class="btn-edite" data-id="${doc.id}" >Edite</button>
                 </div>
             `
         });
@@ -35,7 +37,26 @@ window.addEventListener('DOMContentLoaded', async () => {
             btn.addEventListener('click', ({target: {dataset}}) => {
                 deleteTask(dataset.id)
             })
-        })
+        });
+
+         //Seleccionamos el boton y creamos un metodo para editar
+         const btnEdite = taskContainer.querySelectorAll('.btn-edite')
+
+         btnEdite.forEach(btn => {
+             btn.addEventListener('click', async (e) => {
+                const doc = await getTask(e.target.dataset.id)
+                //console.log(doc.data())
+                const task = doc.data();
+                taskForm["task-title"].value = task.title
+                taskForm["task-description"].value = task.description
+
+                editStatus = true
+                taskForm["task-salvar"].innerHTML='update'
+                id = doc.id;
+             })
+
+             
+         });
     });
     
    
@@ -52,7 +73,17 @@ taskForm.addEventListener('submit', (e) => {
     const title = taskForm['task-title']
     const description = taskForm['task-description']
 
-    saveTask(title.value, description.value)
+    if (!editStatus) {
+        saveTask(title.value, description.value)
+    } else {
+        updateTask(id, {
+            title : title.value, 
+            description: description.value
+        })
+
+        editStatus = false;
+    }
+    
     //console.log(e)
     taskForm.reset()
 })
