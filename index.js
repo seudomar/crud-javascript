@@ -2,6 +2,7 @@ import {saveTask, getTasks, getTask, onGetTask, deleteTask, updateTask} from './
 
 const taskForm = document.getElementById('task-form')
 const taskContainer = document.getElementById('tasks-container')
+const salvar = document.getElementById('task-salvar')
 let editStatus = false;
 let id = '';
 //Este evento nos permite ejecutar algo cuando la pagina se carga
@@ -13,13 +14,10 @@ window.addEventListener('DOMContentLoaded', async () => {
     onGetTask((querySnapshot) => {
 
 
-        
-
+        taskContainer.innerHTML = ''
         querySnapshot.forEach(doc => {
             const task = doc.data()
-            
-            taskContainer.innerHTML = '';
-
+    
             taskContainer.innerHTML += `
                 <div class="card card-body mt-2 border-primary">
                 
@@ -27,8 +25,8 @@ window.addEventListener('DOMContentLoaded', async () => {
                     <p> ${task.description} </p>
                     <div>
 
-                        <button class="btn btn-primary btn-delete" data-id="${doc.id}" >Delete</button>
-                        <button class="btn btn-secondary btn-edite" data-id="${doc.id}" >Edite</button>
+                        <button value="Delete" class="btn btn-primary btn-delete" data-id="${doc.id}" >Delete</button>
+                        <button value="Update" class="btn btn-secondary btn-edite" data-id="${doc.id}" >Edite</button>
                 
                     </div>
                 </div>
@@ -57,8 +55,9 @@ window.addEventListener('DOMContentLoaded', async () => {
                 taskForm["task-description"].value = task.description
 
                 editStatus = true
-                taskForm["task-salvar"].innerHTML='update'
+                salvar.innerHTML='Update'
                 id = doc.id;
+                
              })
 
              
@@ -86,13 +85,14 @@ taskForm.addEventListener('submit', (e) => {
             title : title.value, 
             description: description.value
             
-            
         })
-        taskForm["task-salvar"].g
+
+        
         editStatus = false;
+        
         
     }
     
-    //console.log(e)
+    salvar.innerHTML='Salvar'
     taskForm.reset()
 })
