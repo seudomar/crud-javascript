@@ -13,22 +13,28 @@ window.addEventListener('DOMContentLoaded', async () => {
     onGetTask((querySnapshot) => {
 
 
-        let html = ''
+        
+
         querySnapshot.forEach(doc => {
             const task = doc.data()
-    
-            html += `
-                <div>
+            
+            taskContainer.innerHTML = '';
+
+            taskContainer.innerHTML += `
+                <div class="card card-body mt-2 border-primary">
                 
-                    <h2> ${task.title} </h1>
+                    <h2 class="h4"> ${task.title} </h1>
                     <p> ${task.description} </p>
-                    <button class="btn-delete" data-id="${doc.id}" >Delete</button>
-                    <button class="btn-edite" data-id="${doc.id}" >Edite</button>
+                    <div>
+
+                        <button class="btn btn-primary btn-delete" data-id="${doc.id}" >Delete</button>
+                        <button class="btn btn-secondary btn-edite" data-id="${doc.id}" >Edite</button>
+                
+                    </div>
                 </div>
             `
         });
     
-        taskContainer.innerHTML = html
         
         //Seleccionamos el boton y creamos un metodo
         const btnDelecte = taskContainer.querySelectorAll('.btn-delete')
@@ -79,9 +85,12 @@ taskForm.addEventListener('submit', (e) => {
         updateTask(id, {
             title : title.value, 
             description: description.value
+            
+            
         })
-
+        taskForm["task-salvar"].g
         editStatus = false;
+        
     }
     
     //console.log(e)
